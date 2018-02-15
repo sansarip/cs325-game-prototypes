@@ -16,6 +16,8 @@ window.onload = function() {
 	var ballP = "assets/Sprites/ball.png"
 	var chocoP = "assets/Sprites/choco.png"
 	var boneP = "assets/Sprites/bone.png"
+	var chickenP = "assets/Sprites/chicken.png"
+	var heartP = "assets/Sprites/heart.png"
 	
     function preload() {
         game.load.image( 'pepper1', pepper1P );
@@ -23,60 +25,120 @@ window.onload = function() {
 		game.load.image('ball', ballP);
 		game.load.image('bone', boneP);
 		game.load.image('choco', chocoP);
+		game.load.image('chicken', chickenP);
+		game.load.image('heart', heartP);
 		//game.load.image('heart', heart);
 		
     }
     
     var pepper;
+	var chicken;
 	var flipLeft = true;
 	var random;
 	var points = 0;
-	var hearts = 3;
+	var heartsNum = 3;
 	var bones;
+	var chocos;
+	var chickenDir;
+	var hearts = [];
+	var pointsText;
     
     function create() {
 		game.stage.backgroundColor = "#4488AA"
-        // Create a sprite at the center of the screen using the 'logo' image.
-        pepper = game.add.sprite( game.randomX, game.world.randomY, 'pepper1' );
-        // Anchor the sprite at its center, as opposed to its top-left corner.
-        // so it will be truly centered.
+		
+		// spawn player
+        pepper = game.add.sprite( game.world.randomX, game.world.centerY, 'pepper1' );
         pepper.anchor.setTo( 0.5, 0.5 );
         pepper.width = 200;
 		pepper.height = 200;
 		
+		// spawn chicken
+		chicken = game.add.sprite( 0, 40, 'chicken');
+		chicken.anchor.setTo( 0.5, 0.5 );
+        chicken.width = 200;
+		chicken.height = 200;
+		chicken.scale.x *= -1;
+		chickenDir = true;
+		
+		// add player lives
+		var i;
+		var size = 35;
+		for (i = 0; i < 3; i++) {
+			hearts.push(game.add.sprite( game.world.width-((i+1)*size), 0, 'heart' ));
+			hearts[i].width = size;
+			hearts[i].height = size;
+		}
+		
+		// create bone item group
 		bones = game.add.group();
 		bones.enableBody = true;
 		bones.physicsBodyType = Phaser.Physics.ARCADE;
-		//createBones();
 		
-        // Turn on the arcade physics engine for this sprite.
+		// create chocolate item group
+		chocos = game.add.group();
+		chocos.enableBody = true;
+		chocos.physicsBodyType = Phaser.Physics.ARCADE;
+        
+		// turn on the arcade physics engine for this sprite.
         game.physics.enable( pepper, Phaser.Physics.ARCADE );
 		this.game.physics.arcade.gravity.y = 300
-        // Make it bounce off of the world bounds.
+        
+		// make player bounce off of the world bounds
         pepper.body.collideWorldBounds = true;
         
-        // Add some text using a CSS style.
-        // Center it in X, and position its top 15 pixels from the top of the world.
-        var style = { font: "25px Verdana", fill: "#9999ff", align: "center" };
-        var text = game.add.text( game.world.centerX, 15, "Build something amazing.", style );
-        text.anchor.setTo( 0.5, 0.0 );
+        // add some text using a CSS style.
+        // center it in X, and position its top 15 pixels from the top of the world.
+        var style = { font: "30px Verdana", fill: "#000000", align: "center" };
+        pointsText = game.add.text(game.world.centerX, 0, "0", style);
+        pointsText.anchor.setTo( 0.5, 0.0 );
 		
-		game.time.events.repeat(Phaser.Timer.SECOND * 2, 100, spawnItems, this);
+		// spawn items
+		game.time.events.repeat(Phaser.Timer.SECOND * 1, 100, spawnItems, this);
     }
     
     function update() {
-        // Accelerate the 'logo' sprite towards the cursor,
-        // accelerating at 500 pixels/second and moving no faster than 500 pixels/second
-        // in X or Y.
-        // This function returns the rotation angle that makes it visually match its
-        // new trajectory.
+		movePlayer();
+		moveChicken();
+		game.physics.arcade.overlap(bones, pepper, collisionHandler, null, this);
+		game.physics.arcade.overlap(chocos, pepper, collisionHandler, null, this);
+		checkHearts();
+    }
+	
+	function collisionHandler(obj1, obj2) {
+		if (obj2.name === "bone") {
+			points += 1;
+			pointsText.text = points;
+		} else if (obj2.name === "choco") {
+			heartsNum -= 1;
+			try {
+				hearts[hearts.length-1].destroy();
+				hearts.pop();
+			} catch (err) {
+				console.log(err.message);
+			}
+			
+		}
+		obj2.destroy();
+	}
+	
+	
+	function checkHearts() {
+		if (heartsNum <= 0) {
+			game.destroy();
+		}
+	}
+	
+	/*
+	 * allows player to move using keyboard arrow keys
+	 */
+	function movePlayer() {
 		if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
 		{
 			if (!flipLeft) {
 				pepper.scale.x *= -1;
 				flipLeft = true;
 			}
-			pepper.x -= 4;
+			pepper.x -= 8;
 		}
 		else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
 		{
@@ -84,26 +146,66 @@ window.onload = function() {
 				pepper.scale.x *= -1;
 				flipLeft = false;
 			}
-			pepper.x += 4;
+			pepper.x += 8;
 		}
 
 		if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
 		{
-			pepper.y -= 4;
+			pepper.y -= 8;
 		}
 		else if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN))
 		{
-			pepper.y += 4;
+			pepper.y += 8;
 		}
-    }
-	
-	function createBones() {
-		var bone = bones.create(game.world.randomX * 10, game.world.centerY - 400, 'bone');
-		bone.anchor.setTo(0.5, 0.5);
-		bone.x = 100;
-		bone.y = 100;
 	}
 	
+	/*
+	 * moves the chicken from left to right
+	 */
+	function moveChicken() {
+		if(chicken.x <= 0) {
+			chickenDir = true
+			chicken.scale.x *= -1;
+		} else if (chicken.x >= game.world.width) {
+			chickenDir = false
+			chicken.scale.x *= -1;
+		}
+		
+		if (chickenDir) {
+			chicken.x += 6
+		} else {
+			chicken.x -= 6
+		}
+	}
+	
+	/*
+	 * spawns bones
+	 */
+	function createBones() {
+		var bone = bones.create(chicken.x, chicken.y, 'bone');
+		bone.anchor.setTo(0.5, 0.5);
+		bone.width = 70;
+		bone.height = 70;
+		bone.name = "bone";
+		game.add.tween(bone).to( { angle: 360 }, 1000, Phaser.Easing.Linear.None, true, 0, -1, false);
+	}
+	
+	/*
+	 * spawns chocolates
+	 */
+	function createChocos() {
+		var choco = chocos.create(chicken.x, chicken.y, 'choco');
+		choco.anchor.setTo(0.5, 0.5);
+		choco.width = 75;
+		choco.height = 75;
+		choco.name = "choco"
+		game.add.tween(choco).to( { angle: 360 }, 2000, Phaser.Easing.Linear.None, true, 0, -1, false);
+	}
+	
+	
+	/*
+	 * spawns items
+	 */
 	function spawnItems() {
 		random = Math.floor(Math.random() * 10);
 		if (random >= 5) {
@@ -115,6 +217,7 @@ window.onload = function() {
 			// spawn balls
 		} else if (random <= 2) {
 			// spawn chocolate
+			createChocos();
 		}
 	}
 };

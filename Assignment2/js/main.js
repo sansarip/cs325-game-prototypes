@@ -110,7 +110,7 @@ window.onload = function() {
 		resetHearts();
 		
 		// spawn items
-		game.time.events.repeat(Phaser.Timer.SECOND * 1, 100, spawnItems, this);
+		game.time.events.repeat(Phaser.Timer.SECOND * 1, 10000, spawnItems, this);
     }
    
     function update() {

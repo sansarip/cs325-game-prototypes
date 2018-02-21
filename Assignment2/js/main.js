@@ -19,6 +19,7 @@ window.onload = function() {
 	var chickenP = "assets/Sprites/chicken.png"
 	var heartP = "assets/Sprites/heart.png"
 	var floorP = "assets/Sprites/floor.png"
+	var themeP = "assets/Audio/maintheme.ogg"
 	
     function preload() {
         game.load.image( 'pepper1', pepper1P );
@@ -29,6 +30,7 @@ window.onload = function() {
 		game.load.image('chicken', chickenP);
 		game.load.image('heart', heartP);
 		game.load.image('floor', floorP);
+		game.load.audio("theme", [themeP]);
     }
     
     var pepper;
@@ -49,8 +51,10 @@ window.onload = function() {
 	var endGame;
 	var floor;
 	var gravity = 300;
+	var theme;
     
     function create() {
+		theme = game.add.audio("theme");
 		this.game.physics.arcade.gravity.y = 0;
 		endGame = false;
 		game.stage.backgroundColor = "#4488AA"
@@ -111,6 +115,9 @@ window.onload = function() {
 		
 		// spawn items
 		game.time.events.repeat(Phaser.Timer.SECOND * 1, 10000, spawnItems, this);
+		
+		theme.loop = true;
+		theme.play();
     }
    
     function update() {

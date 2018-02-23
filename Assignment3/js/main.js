@@ -10,18 +10,20 @@ window.onload = function() {
     // loading functions to reflect where you are putting the assets.
     // All loading functions will typically all be found inside "preload()".
     
-    var game = new Phaser.Game(1024, 768, Phaser.CANVAS, 'game', { preload: preload, create: create, update: update, render: render} );
-    var cloudP = "assets/Sprites/clouds.png"
-	var goodP = "assets/Sprites/good.png"
-	var badP = "assets/Sprites/bad.png"
-	var themeP = "assets/Audio/maintheme.ogg"
-	var hitP = "assets/Audio/hit.wav"
-	var backgroundP = "assets/Backgrounds/bluesky.png"
+    var game = new Phaser.Game(1024, 768, Phaser.AUTO, 'game', { preload: preload, create: create, update: update, render: render} );
+    var cloudP = "assets/Sprites/clouds.png";
+	var goodP = "assets/Sprites/good.png";
+	var badP = "assets/Sprites/bad.png";
+	var shineP = "assets/Sprites/shine.png";
+	var themeP = "assets/Audio/maintheme.ogg";
+	var hitP = "assets/Audio/hit.wav";
+	var backgroundP = "assets/Backgrounds/bluesky.png";
 	
     function preload() {
         game.load.spritesheet("clouds", cloudP, 64, 64);
 		game.load.spritesheet("bad", badP, 64, 64);
         game.load.spritesheet("good", goodP, 64, 64);
+		game.load.spritesheet("shine", shineP, 128, 128);
 		game.load.image("sky", backgroundP);
 		game.load.audio("theme", [themeP]);
 		game.load.audio("hit", [hitP]);
@@ -37,6 +39,7 @@ window.onload = function() {
 	const MAX_SPEEDBOOST = 12;	// max speed <= speed * boost^MAX_SPEEDBOOST
 	const SCORE_INCR = 100;
 	var player;
+	var shine;
 	var theme;
 	var hit;
 	var background;
@@ -44,14 +47,16 @@ window.onload = function() {
 	var badArray = [];
 	var goodCount = 0;
 	var badCount = 0;
-	var speedBoostCount = 0;
+	var boostCount = 0;
 	var score = 0;
 	var endGame = false;
+	var shiny = false;
 	var boost = 1;
 	var header1;
 	var header2;
 	var header3;
 	var scoreText;
+	var endText = [];
 	
     function create() {
 		// set world bounds
@@ -85,8 +90,7 @@ window.onload = function() {
 		theme = game.add.audio("theme");
 		hit = game.add.audio("hit");
 		hit.volume = .25;
-		theme.loop = true;
-		theme.play();
+		theme.onDecoded.add(start, this);
 		
 		// set camera
 		game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON);
@@ -97,23 +101,38 @@ window.onload = function() {
         header2 = { font: "30px Calibri", fill: "#000000", align: "center" };
 		header1 = { font: "60px Calibri", fill: "#000000", align: "center" };
 		
-		// initialize score
+		// initialize text
 		scoreText = game.add.text(game.camera.width/2, 0, "Score: 0", header2);
 		scoreText.anchor.setTo( 0.5, 0.0 );
 		scoreText.fixedToCamera = true;
-        resetPoints();
+		
+		
     }
    
     function update() {
 		if (!endGame) {
+			addShine();
 			movePlayer();
 			overlap();
+	} else {
+			game.input.onDown.addOnce(restart, this);
 		}
     }
 	
 	function render() {
 		//game.debug.cameraInfo(game.camera, 32, 32);
 		//game.debug.spriteCoords(player, 32, 500);
+	}
+	
+	// plays main theme
+	function start() {
+		theme.loop = true;
+		theme.play();
+	}
+	
+	// restarts game
+	function restart() {
+		location.reload();
 	}
 	
 	class Good {
@@ -165,6 +184,7 @@ window.onload = function() {
 			this.bad.width = width;
 			this.bad.height = height;
 			this.bad.name = "bad";
+			this.bad.alpha = 1;
 			this.bad.anchor.setTo(0.5, 0.5);
 			this.bad.animations.add("bad_float");
 			this.bad.animations.play("bad_float", 10, true);
@@ -197,8 +217,11 @@ window.onload = function() {
 			var i;
 			for (i = 0; i < badArray.length; i++) {
 				if (bool) {
-					game.physics.arcade.moveToXY(badArray[i].badObj, player.x, player.y, badArray[i].speedVal*boost-(speedBoostCount*(SCALAR/2)));
+					game.physics.arcade.moveToXY(badArray[i].badObj, player.x, player.y, badArray[i].speedVal*boost-(boostCount*(SCALAR/2)));
 					badArray[i].lifeVal -= game.time.elapsed/1000;
+					if (badArray[i].badObj.alpha > 0) {
+						badArray[i].badObj.alpha -= 0.001;
+					}
 					if (badArray[i].lifeVal <= 0) {
 						badArray[i].badObj.destroy();
 						badArray.splice(i, 1);
@@ -227,13 +250,17 @@ window.onload = function() {
 		if (obj2.name === "player" && obj1.name === "good") {
 			Good.destroy(obj1);
 			updateScore(true);
-			if (speedBoostCount < MAX_SPEEDBOOST) {
+			if (boostCount < MAX_SPEEDBOOST) {
 				player.width *= SCALAR;
 				player.height *= SCALAR;
 				boost *= SCALAR;
-				speedBoostCount += 1;
+				boostCount += 1;
 			}
 		} else if (obj2.name === "player" && obj1.name === "bad") {
+			if (shiny) {
+				shine.destroy();
+				shiny = false;
+			}
 			Bad.destroy(obj1);
 			player.body.velocity.setTo(0,0);
 			player.loadTexture("bad");
@@ -241,8 +268,14 @@ window.onload = function() {
 			player.animations.play("dead", 10, true);
 			endGame = true;
 			game.camera.shake(0.05, 500);
-			theme.fadeTo(5000, .25);
+			theme.fadeTo(100, .25);
 			hit.play();
+			endText[0] = game.add.text(game.camera.width/2, game.camera.height/2, "Oh no! You've turned into a thunder boi!", header1);
+			endText[0].anchor.setTo( 0.5, 0.0 );
+			endText[0].fixedToCamera = true;			
+			endText[1] = game.add.text(game.camera.width/2, game.camera.height/2 + 75, "CLICK to play again!", header2);
+			endText[1].anchor.setTo( 0.5, 0.0 );
+			endText[1].fixedToCamera = true;
 		}
 	}
 	
@@ -250,12 +283,10 @@ window.onload = function() {
 	function overlap() {
 		var i;
 		for (i = 0; i < goodArray.length; i++) {
-			try {
-				game.physics.arcade.overlap(goodArray[i].goodObj, player, collisionHandler, null, this);
-				game.physics.arcade.overlap(badArray[i].badObj, player, collisionHandler, null, this);
-			} catch (err) {
-				
-			}
+			game.physics.arcade.overlap(goodArray[i].goodObj, player, collisionHandler, null, this);
+		}
+		for (i = 0; i < badArray.length; i++) {
+			game.physics.arcade.overlap(badArray[i].badObj, player, collisionHandler, null, this);
 		}
 	}
 	
@@ -263,11 +294,17 @@ window.onload = function() {
 	function movePlayer() {
 		if (game.input.activePointer.leftButton.isDown) {
 			game.physics.arcade.moveToXY(player, game.input.activePointer.worldX, game.input.activePointer.worldY, BASE_SPEED * 2 * boost);
+			if (shiny) {
+				game.physics.arcade.moveToXY(shine, game.input.activePointer.worldX, game.input.activePointer.worldY, BASE_SPEED * 2 * boost);
+			}
 			updateScore(false);
 			Bad.chase(true);
 		} else if (!game.input.activePointer.leftButton.isDown) {
 			player.body.velocity.x=0;
 			player.body.velocity.y=0;
+			if (shiny) {
+				shine.body.velocity.setTo(0,0);
+			}
 			Bad.chase(false);
 		}
 	}
@@ -284,9 +321,24 @@ window.onload = function() {
 	// spawns the bad clouds
 	function spawnBadClouds() {
 		if (badCount < MAX_BAD) {
-			var b = new Bad(50, 50);
+			var b = new Bad(75, 75);
 			badArray.push(b);
 			badCount += 1;
+		}
+	}
+	
+	// adds shining effect to player cloud
+	function addShine() {
+		if (boostCount == MAX_SPEEDBOOST-1 && !shiny) {
+			shine = game.add.sprite(player.x, player.y, "shine");
+			shine.anchor.setTo(0.5, 0.5);
+			shine.width = 250;
+			shine.height = 250;
+			shine.name = "shine";
+			shine.animations.add("shining");
+			shine.animations.play("shining", 10, true);
+			game.physics.enable(shine, Phaser.Physics.ARCADE);
+			shiny = true;
 		}
 	}
 }

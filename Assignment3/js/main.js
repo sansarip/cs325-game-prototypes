@@ -220,7 +220,7 @@ window.onload = function() {
 					game.physics.arcade.moveToXY(badArray[i].badObj, player.x, player.y, badArray[i].speedVal*boost-(boostCount*(SCALAR/2)));
 					badArray[i].lifeVal -= game.time.elapsed/1000;
 					if (badArray[i].badObj.alpha > 0) {
-						badArray[i].badObj.alpha -= 0.0015;
+						badArray[i].badObj.alpha -= 0.0012;
 					}
 					if (badArray[i].lifeVal <= 0) {
 						badArray[i].badObj.destroy();

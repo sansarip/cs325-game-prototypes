@@ -38,6 +38,7 @@ window.onload = function() {
 	const SCALAR = 1.05;
 	const MAX_SPEEDBOOST = 12;	// max speed <= speed * boost^MAX_SPEEDBOOST
 	const SCORE_INCR = 100;
+	const HIT_MERCY = 30;
 	var player;
 	var shine;
 	var theme;
@@ -190,6 +191,7 @@ window.onload = function() {
 			this.bad.animations.play("bad_float", 10, true);
 			this.speed = random * BASE_SPEED + BASE_SPEED;
 			game.physics.enable(this.bad, Phaser.Physics.ARCADE);
+			this.bad.body.setSize(Math.abs(this.bad.width-HIT_MERCY), Math.abs(this.bad.height-HIT_MERCY), 0, 0);
 		}
 		
 		get badObj() {
@@ -253,6 +255,7 @@ window.onload = function() {
 			if (boostCount < MAX_SPEEDBOOST) {
 				player.width *= SCALAR;
 				player.height *= SCALAR;
+				player.body.setSize(Math.abs(player.width-HIT_MERCY), Math.abs(player.height-HIT_MERCY), 0, 0);
 				boost *= SCALAR;
 				boostCount += 1;
 			}

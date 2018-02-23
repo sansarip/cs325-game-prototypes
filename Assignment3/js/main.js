@@ -50,6 +50,7 @@ window.onload = function() {
 	var badCount = 0;
 	var boostCount = 0;
 	var score = 0;
+	var goodCursor = 0;
 	var endGame = false;
 	var shiny = false;
 	var boost = 1;
@@ -225,9 +226,8 @@ window.onload = function() {
 						badArray[i].badObj.alpha -= 0.00135;
 					}
 					if (badArray[i].lifeVal <= 0) {
-						badArray[i].badObj.destroy();
+						Bad.destroy(badArray[i].badObj);
 						badArray.splice(i, 1);
-						badCount -= 1;
 					}
 				} else {
 					badArray[i].badObj.body.velocity.setTo(0,0);
@@ -251,6 +251,7 @@ window.onload = function() {
 	function collisionHandler(obj1, obj2) {
 		if (obj2.name === "player" && obj1.name === "good") {
 			Good.destroy(obj1);
+			goodArray.splice(goodCursor, 1);
 			updateScore(true);
 			if (boostCount < MAX_SPEEDBOOST) {
 				player.width *= SCALAR;
@@ -286,6 +287,7 @@ window.onload = function() {
 	function overlap() {
 		var i;
 		for (i = 0; i < goodArray.length; i++) {
+			goodCursor = i;
 			game.physics.arcade.overlap(goodArray[i].goodObj, player, collisionHandler, null, this);
 		}
 		for (i = 0; i < badArray.length; i++) {

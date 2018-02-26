@@ -274,10 +274,10 @@ window.onload = function() {
 			game.camera.shake(0.05, 500);
 			theme.fadeTo(100, .25);
 			hit.play();
-			endText[0] = game.add.text(game.camera.width/2, game.camera.height/2, "Oh no! You've turned into a thunder boi!", header1);
+			endText[0] = game.add.text(game.camera.width/2, game.camera.height/2, "Oh no! You've turned into a thunder boi!", header2);
 			endText[0].anchor.setTo( 0.5, 0.0 );
 			endText[0].fixedToCamera = true;			
-			endText[1] = game.add.text(game.camera.width/2, game.camera.height/2 + 75, "CLICK to play again!", header2);
+			endText[1] = game.add.text(game.camera.width/2, game.camera.height/2 + 75, "CLICK to play again!", header3);
 			endText[1].anchor.setTo( 0.5, 0.0 );
 			endText[1].fixedToCamera = true;
 		}

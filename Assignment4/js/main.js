@@ -90,9 +90,10 @@ window.onload = function() {
 		scoreText.fixedToCamera = true;
 		
 		// spawn enemies
-		game.time.events.repeat(Phaser.Timer.SECOND * 2, 10000, spawnEnemies, this);
+		game.time.events.repeat(Phaser.Timer.SECOND * 1, 10000, createAndManageEnemies, this);
 		
 		theme.loop = true;
+		theme.volume = 0.5;
 		theme.play();
 		
 		cursors = game.input.keyboard.createCursorKeys();
@@ -104,8 +105,10 @@ window.onload = function() {
 	
 	class Bad1 {
 		constructor(width, height) {
-			var random = Math.floor(Math.random()*(bad1Spawns.length+1));
-			this.pos = bad1Spawns[random];
+			var random = Math.floor(Math.random()*(bad1Spawns.length));
+			this.pos = new Phaser.Point();
+			this.pos.x = bad1Spawns[random].x;
+			this.pos.y = bad1Spawns[random].y;
 			this.life = 10;
 			this.bad = game.add.sprite(grid[this.pos.x][this.pos.y].x, grid[this.pos.x][this.pos.y].y, "bad1");
 			this.bad.width = width;
@@ -121,12 +124,28 @@ window.onload = function() {
 			return this.bad;
 		}
 		
+		get iPos() {
+			return this.pos.x;
+		}		
+		
+		get jPos() {
+			return this.pos.y;
+		}
+		
 		get lifeVal() {
 			return this.life;
 		}
 		
 		set lifeVal(newLife) {
 			this.life = newLife;
+		}
+		
+		set iPos(i) {
+			this.pos.x = i;
+		}
+		
+		set jPos(j) {
+			this.pos.y = j;
 		}
 		
 		static destroy(obj) {
@@ -136,13 +155,26 @@ window.onload = function() {
 		
 		static chase(bool) {
 			var i;
-			for (i = 0; i < badArray.length; i++) {
+			for (i = 0; i < bad1Array.length; i++) {
 				if (bool) {
-					
+					var bad1 = bad1Array[i];
+					if (pos.x+1 < bad1.iPos) {
+						bad1.iPos -= 1;
+						bad1.badObj.x = grid[bad1.iPos][bad1.jPos].x;
+					} else if (pos.x-1 > bad1.iPos) {
+						bad1.iPos += 1;
+						bad1.badObj.x = grid[bad1.iPos][bad1.jPos].x;
+					} else if (pos.y+1 < bad1.jPos) {
+						bad1.jPos -= 1;
+						bad1.badObj.y = grid[bad1.iPos][bad1.jPos].y;
+					} else if (pos.y-1 > bad1.jPos) {
+						bad1.jPos += 1;
+						bad1.badObj.y = grid[bad1.iPos][bad1.jPos].y;
+					}
 					// kill enemy
-					if (badArray[i].lifeVal <= 0) {
-						Bad.destroy(badArray[i].badObj);
-						badArray.splice(i, 1);
+					if (bad1Array[i].lifeVal <= 0) {
+						Bad.destroy(bad1Array[i].badObj);
+						bad1Array.splice(i, 1);
 					}
 				} 
 			}
@@ -210,11 +242,12 @@ window.onload = function() {
 		keyDown = false;
 	}
 	
-	function spawnEnemies() {
+	function createAndManageEnemies() {
 		if (bad1Count < MAX_BAD) {
 			var b = new Bad1(64, 64);
 			bad1Array.push(b);
 			bad1Count += 1;
 		}
+		Bad1.chase(true);
 	}
 };

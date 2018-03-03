@@ -10,26 +10,33 @@ window.onload = function() {
     // loading functions to reflect where you are putting the assets.
     // All loading functions will typically all be found inside "preload()".
     
-    var game = new Phaser.Game( 832, 640, Phaser.AUTO, 'game', { preload: preload, create: create, update: update } );
+    var game = new Phaser.Game( 768, 576, Phaser.AUTO, 'game', { preload: preload, create: create, update: update } );
     var playerP = "assets/Sprites/clouds.png";
     var bad1P = "assets/Sprites/bad-1.png";
-	var tile1P = "assets/Sprites/tile-1.png";
+	var bad1AttackP = "assets/Sprites/bad-attack.png"
+	var backgroundP = "assets/Background/background.png";
+	var projectileP = "assets/Sprites/projectile.png"
 	var themeP = "assets/Audio/maintheme.ogg";
 	
     function preload() {
         game.load.spritesheet( "player", playerP, 64, 64);
         game.load.spritesheet( "bad1", bad1P, 64, 64);
-		game.load.image("tile1", tile1P);
+        game.load.spritesheet( "bad1Attack", bad1AttackP, 64, 64);
+		game.load.image("background", backgroundP);
+		game.load.image("projectile", projectileP);
 		game.load.audio("theme", [themeP]);
     }
     
-	const WORLD_WIDTH = 832;
-	const WORLD_HEIGHT = 640;
+	const WORLD_WIDTH = 960;
+	const WORLD_HEIGHT = 960;
 	const MAX_BAD = 20;
 	const iLimit = Math.floor(WORLD_WIDTH/64)-1;
 	const jLimit = Math.floor(WORLD_HEIGHT/64)-1;
 	var bad1Count = 0;
-	var keyDown = false;
+	var flipRight = false;
+	var moveKeyDown = false;
+	var attackKeyDown = false;
+	var background;
     var player;
 	var tile1;
 	var scoreText;
@@ -41,6 +48,7 @@ window.onload = function() {
 	var grid = [];
 	var bad1Spawns = [];
 	var bad1Array = [];
+	var projArray = [];
 	var pos = new Phaser.Point(Math.floor(iLimit/2), Math.floor(jLimit/2));	// pos.x is the i'th index, pos.j is the j'th index
     
     function create() {
@@ -57,8 +65,9 @@ window.onload = function() {
 		this.game.physics.arcade.gravity.y = 0;
 		game.stage.backgroundColor = "#4488AA"
 		
-		// add tiles
-		tile1 = game.add.tileSprite(0, 0, 1920, 1920, "tile1");
+		// add background
+		background = game.add.sprite(game.world.centerX, game.world.centerY, "background");
+		background.anchor.setTo(0.5, 0.5);
 		
 		// spawn player 
 		player = game.add.sprite(grid[pos.x][pos.y].x, grid[pos.x][pos.y].y, "player");
@@ -67,7 +76,7 @@ window.onload = function() {
 		player.height = 50;
 		player.name = "player";
 		player.animations.add("float");
-		player.animations.play("float", 10, true);
+		player.animations.play("float", 5, true);
 		
 		// turn on the arcade physics engine for sprites
         game.physics.enable(player, Phaser.Physics.ARCADE );
@@ -81,7 +90,7 @@ window.onload = function() {
 		header1 = { font: "60px Calibri", fill: "#000000", align: "center" };
 		
 		// set camera
-		//game.camera.follow(player, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
+		game.camera.follow(player, Phaser.Camera.FOLLOW_TOPDOWN);
 		//game.input.mouse.capture = true;
 		
 		// initialize text
@@ -100,12 +109,15 @@ window.onload = function() {
     }
    
     function update() {
-		movePlayer();
+		move();
+		attack();
+		destroyProjectiles();
 	}
 	
 	class Bad1 {
 		constructor(width, height) {
 			var random = Math.floor(Math.random()*(bad1Spawns.length));
+			this.attacking = false;
 			this.pos = new Phaser.Point();
 			this.pos.x = bad1Spawns[random].x;
 			this.pos.y = bad1Spawns[random].y;
@@ -115,8 +127,8 @@ window.onload = function() {
 			this.bad.height = height;
 			this.bad.name = "bad1";
 			this.bad.anchor.setTo(0.5, 0.5);
-			this.bad.animations.add("bad1_idle");
-			this.bad.animations.play("bad1_idle", 10, true);
+			this.bad.animations.add("bad1_idle", [0,1]);
+			this.bad.animations.play("bad1_idle", 5, true);
 			game.physics.enable(this.bad, Phaser.Physics.ARCADE);
 		}
 		
@@ -136,6 +148,14 @@ window.onload = function() {
 			return this.life;
 		}
 		
+		get isAttacking() {
+			return this.attacking;
+		}
+		
+		set isAttacking(val) {
+			this.attacking = val;
+		}
+		
 		set lifeVal(newLife) {
 			this.life = newLife;
 		}
@@ -148,6 +168,20 @@ window.onload = function() {
 			this.pos.y = j;
 		}
 		
+		idle() {
+			this.attacking = false;
+			this.bad.loadTexture("bad1", 0);
+			this.bad.animations.add("bad1_idle", [0,1]);
+			this.bad.animations.play("bad1_idle", 5, true);
+		}
+		
+		attack() {
+			this.attacking = true;
+			this.bad.loadTexture("bad1Attack", 0);
+			this.bad.animations.add("bad1_attack", [0,1]);
+			this.bad.animations.play("bad1_attack", 5, true);
+		}
+		
 		static destroy(obj) {
 			obj.destroy();
 			bad1Count -= 1;
@@ -158,6 +192,7 @@ window.onload = function() {
 			for (i = 0; i < bad1Array.length; i++) {
 				if (bool) {
 					var bad1 = bad1Array[i];
+					// move enemies to player
 					if (pos.x+1 < bad1.iPos) {
 						bad1.iPos -= 1;
 						bad1.badObj.x = grid[bad1.iPos][bad1.jPos].x;
@@ -176,10 +211,23 @@ window.onload = function() {
 						Bad.destroy(bad1Array[i].badObj);
 						bad1Array.splice(i, 1);
 					}
+					// attack player
+					if (checkNeighborPlayer(new Phaser.Point(bad1.iPos, bad1.jPos))) {
+						bad1.attack();
+					} else if (bad1.isAttacking) {
+						bad1.idle();
+					}
 				} 
 			}
 		}
 		
+	}
+	
+	function checkNeighborPlayer(point) {
+		if (Math.abs(point.x-pos.x) <= 1 && Math.abs(point.y-pos.y) <= 1) {
+			return true;
+		}
+		return false;
 	}
 	
 	function createGrid() {
@@ -202,44 +250,86 @@ window.onload = function() {
 		bad1Spawns.push(new Phaser.Point(iLimit, jLimit));
 	}
 	
-	function movePlayer() {
+	function move() {
 		if (cursors.left.isDown)
 		{
-			if (pos.x - 1 >= 0 && !keyDown) {
+			if (pos.x - 1 >= 0 && !moveKeyDown) {
+				if (flipRight) {
+					player.scale.x *= -1;
+					flipRight = false;
+				}	
 				pos.x -= 1;
 				player.x = grid[pos.x][pos.y].x
 			}
-			keyDown = true;
+			moveKeyDown = true;
 			return;
 		}
 		else if (cursors.right.isDown)
 		{
-			if (pos.x + 1 <= iLimit && !keyDown) {
+			if (pos.x + 1 <= iLimit && !moveKeyDown) {
+				if (!flipRight) {
+					player.scale.x *= -1;
+					flipRight = true;
+				}
 				pos.x += 1;
 				player.x = grid[pos.x][pos.y].x
 			}
-			keyDown = true;
+			moveKeyDown = true;
 			return;
 		}
-		if (cursors.up.isDown)
+		else if (cursors.up.isDown)
 		{
-			if (pos.y - 1 >= 0 && !keyDown) {
+			if (pos.y - 1 >= 0 && !moveKeyDown) {
 				pos.y -= 1;
 				player.y = grid[pos.x][pos.y].y
 			}
-			keyDown = true;
+			moveKeyDown = true;
 			return;
 		}
 		else if (cursors.down.isDown)
 		{
-			if (pos.y + 1 <= jLimit && !keyDown) {
+			if (pos.y + 1 <= jLimit && !moveKeyDown) {
 				pos.y += 1;
 				player.y = grid[pos.x][pos.y].y
 			}
-			keyDown = true;
+			moveKeyDown = true;
 			return;
 		}
-		keyDown = false;
+		moveKeyDown = false;
+	}
+	
+	function attack() {
+		if (game.input.keyboard.isDown(Phaser.Keyboard.A) && !attackKeyDown) {
+			if (flipRight) {
+				player.scale.x *= -1;
+				flipRight = false;
+			}
+			var s = game.add.sprite(grid[pos.x][pos.y].x-32, grid[pos.x][pos.y].y, "projectile");
+			s.anchor.setTo(0.5, 0.5);
+			s.width = 16;
+			s.height = 16;
+			game.physics.enable(s, Phaser.Physics.ARCADE );
+			s.body.velocity.setTo(-600, 0);
+			projArray.push(s);
+			attackKeyDown = true;
+			return;
+		}
+		else if (game.input.keyboard.isDown(Phaser.Keyboard.D) && !attackKeyDown) {
+			if (!flipRight) {
+				player.scale.x *= -1;
+				flipRight = true;
+			}
+			var s = game.add.sprite(grid[pos.x][pos.y].x+32, grid[pos.x][pos.y].y, "projectile");
+			s.anchor.setTo(0.5, 0.5);
+			s.width = 16;
+			s.height = 16;
+			game.physics.enable(s, Phaser.Physics.ARCADE);
+			s.body.velocity.setTo(600, 0);
+			projArray.push(s);
+			attackKeyDown = true;
+			return;
+		}
+		attackKeyDown = false;
 	}
 	
 	function createAndManageEnemies() {
@@ -249,5 +339,15 @@ window.onload = function() {
 			bad1Count += 1;
 		}
 		Bad1.chase(true);
+	}
+	
+	function destroyProjectiles() {
+		var i;
+		for (i = 0; i < projArray.length; i++) {
+			if (projArray[i].x >= WORLD_WIDTH || projArray[i] <= 0) {
+				projArray[i].destroy();
+				projArray.splice(i, 1);
+			}
+		}
 	}
 };

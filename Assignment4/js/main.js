@@ -286,6 +286,7 @@ window.onload = function() {
 		}
 	}
 	
+	// shows the end game message
 	function displayEndText() {
 		endText[0] = game.add.text(game.camera.width/2, game.camera.height/2, "Egads! The bears got you!", header1);
 		endText[0].anchor.setTo( 0.5, 0.0 );

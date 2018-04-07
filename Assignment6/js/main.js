@@ -16,6 +16,8 @@ window.onload = function() {
 	let tile1P = "assets/Background/circuit.png";
 	let heartP = "assets/Sprites/heart.png";
 	let themeP = "assets/Audio/maintheme.ogg";
+	let ouchP = "assets/Audio/ouch.ogg";
+	let killP = "assets/Audio/kill.ogg";
 	
     function preload() {
         game.load.spritesheet( "bad1", bad1P, 128, 128);
@@ -23,6 +25,8 @@ window.onload = function() {
 		game.load.image("tile1", tile1P);
 		game.load.image("heart", heartP);
 		game.load.audio("theme", [themeP]);
+		game.load.audio("ouch", [ouchP]);
+		game.load.audio("kill", [killP]);
     }
     
 	const WORLD_WIDTH = 800;
@@ -57,9 +61,14 @@ window.onload = function() {
 	let nextEnemy = 0;
 	let gameStart = false;
 	let theme;
+	let ouch;
+	let kill;
     function create() {
-
+		
+		// add audio
 		theme = game.add.audio("theme");
+		ouch = game.add.audio("ouch");
+		kill = game.add.audio("kill");
 		
 		this.game.physics.arcade.gravity.y = 0;
 		
@@ -100,9 +109,12 @@ window.onload = function() {
 		// move enemies 
 		game.time.events.repeat(Phaser.Timer.SECOND * .25, 99999999, moveEnemies, this);
 		
+		// audio setting
 		theme.loop = true;
 		theme.volume = 0.20;
-		theme.play();
+		theme.play();		
+		ouch.volume = .6;	
+		kill.volume = .7;
 		
 		cursors = game.input.keyboard.createCursorKeys();
 		
@@ -422,6 +434,7 @@ window.onload = function() {
 		bad1EffectCount += 1;
 		bad1Array.splice(nextEnemy, 1);
 		bad1Count -= 1;
+		kill.play();
 	}
 	
 	function nextRandomWord() {
@@ -486,6 +499,7 @@ window.onload = function() {
 				bad1Count -= 1;
 				bad1Array.splice(i,1);
 				damagePlayer();
+				ouch.play();
 			}
 		}
 	}

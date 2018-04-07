@@ -225,6 +225,7 @@ window.onload = function() {
 			wordText.visible = false;
 			typedText.visible = false;
 			dead.play();
+			theme.fadeTo(100, .10)
 		}
 	}
 	

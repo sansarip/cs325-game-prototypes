@@ -482,7 +482,7 @@ window.onload = function() {
 		for (i = 0; i < bad1Count; i++) {
 			let bad1 = bad1Array[i];
 			if (bad1.canMove) {
-				bad1.badObj.y += 15;
+				bad1.badObj.y += 25;
 			}
 		}
 	}

@@ -22,6 +22,7 @@ window.onload = function() {
         game.load.spritesheet( "effect1", effect1P, 128, 128);
 		game.load.image("tile1", tile1P);
 		game.load.image("heart", heartP);
+		game.load.audio("theme", [themeP]);
     }
     
 	const WORLD_WIDTH = 800;
@@ -55,9 +56,10 @@ window.onload = function() {
 	let charIndex = 0;
 	let nextEnemy = 0;
 	let gameStart = false;
+	let theme;
     function create() {
 
-		// theme = game.add.audio("theme");
+		theme = game.add.audio("theme");
 		
 		this.game.physics.arcade.gravity.y = 0;
 		
@@ -98,11 +100,9 @@ window.onload = function() {
 		// move enemies 
 		game.time.events.repeat(Phaser.Timer.SECOND * .25, 99999999, moveEnemies, this);
 		
-		/*
 		theme.loop = true;
-		theme.volume = 0.5;
+		theme.volume = 0.20;
 		theme.play();
-		*/
 		
 		cursors = game.input.keyboard.createCursorKeys();
 		

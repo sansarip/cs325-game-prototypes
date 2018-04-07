@@ -124,7 +124,7 @@ window.onload = function() {
 		cursors = game.input.keyboard.createCursorKeys();
 		
 		//  stop the following keys from propagating up to the browser
-		game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
+		game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR, Phaser.Keyboard.BACKSPACE ]);
     }
    
     function update() {

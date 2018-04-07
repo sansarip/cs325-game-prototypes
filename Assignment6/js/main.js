@@ -18,6 +18,7 @@ window.onload = function() {
 	let themeP = "assets/Audio/maintheme.ogg";
 	let ouchP = "assets/Audio/ouch.ogg";
 	let killP = "assets/Audio/kill.ogg";
+	let deadP = "assets/Audio/dead.ogg"
 	
     function preload() {
         game.load.spritesheet( "bad1", bad1P, 128, 128);
@@ -27,6 +28,7 @@ window.onload = function() {
 		game.load.audio("theme", [themeP]);
 		game.load.audio("ouch", [ouchP]);
 		game.load.audio("kill", [killP]);
+		game.load.audio("dead", [deadP]);
     }
     
 	const WORLD_WIDTH = 800;
@@ -63,12 +65,14 @@ window.onload = function() {
 	let theme;
 	let ouch;
 	let kill;
+	let dead;
     function create() {
 		
 		// add audio
 		theme = game.add.audio("theme");
 		ouch = game.add.audio("ouch");
 		kill = game.add.audio("kill");
+		dead = game.add.audio("dead");
 		
 		this.game.physics.arcade.gravity.y = 0;
 		
@@ -115,6 +119,7 @@ window.onload = function() {
 		theme.play();		
 		ouch.volume = .6;	
 		kill.volume = .7;
+		dead.volume = .8;
 		
 		cursors = game.input.keyboard.createCursorKeys();
 		
@@ -219,6 +224,7 @@ window.onload = function() {
 			displayEndText();
 			wordText.visible = false;
 			typedText.visible = false;
+			dead.play();
 		}
 	}
 	

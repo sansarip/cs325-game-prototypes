@@ -205,6 +205,8 @@ window.onload = function() {
 			heartsArray[heartsArray.length-1].destroy();
 			heartsArray.pop();
 			hearts -= 1;
+			ouch.play();
+			game.camera.shake(0.025, 500);
 		} catch (err) {
 			console.log(err.message);
 		}
@@ -499,7 +501,6 @@ window.onload = function() {
 				bad1Count -= 1;
 				bad1Array.splice(i,1);
 				damagePlayer();
-				ouch.play();
 			}
 		}
 	}

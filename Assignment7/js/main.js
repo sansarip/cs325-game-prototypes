@@ -39,7 +39,7 @@ window.onload = function() {
 	const MAX_HEARTS = 3;
 	const LEVEL_UP_TIME = 30;	// actually 60 seconds because enemies spawn every 2 seconds and that's when the time till next level also gets updated
 	const MAX_LEVEL = LEVEL_UP_TIME * 5;
-	const SPEED_INCREASE = 10;
+	const SPEED_INCREASE = 7;
 	let timeToNextLevel = 1;
 	let enemySpeed = 25;
 	let endText = [];
@@ -74,7 +74,8 @@ window.onload = function() {
 	let kill;
 	let dead;
 	let q; let w; let e; let r; let t; let y; let u; let i; let o; let p; let a; let s; let d; let f; let g; let h; let j; let k; let l; let z; let x; let c; let v; let b; let n; let m; let spacebar;
-    function create() {
+    let q1 = false; let w1 = false; let e1 = false; let r1 = false; let t1 = false; let y1 = false; let u1 = false; let i1 = false; let o1 = false; let p1 = false; let a1 = false; let s1 = false; let d1 = false; let f1 = false; let g1 = false; let h1 = false; let j1 = false; let k1 = false; let l1 = false; let z1 = false; let x1 = false; let c1 = false; let v1 = false; let b1 = false; let n1 = false; let m1 = false; let spacebar1 = false;
+	function create() {
 		
 		// add audio
 		theme = game.add.audio("theme");
@@ -272,166 +273,219 @@ window.onload = function() {
 		let letter = "";
 		if (q.isDown) {
 			letter = "q";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!q1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (w.isDown) {
+				q1 = true;				flipflop = true;			}
+		} else {
+			q1 = false;
+		}
+		if (w.isDown) {
 			letter = "w";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!w1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (e.isDown) {
+				w1 = true;				flipflop = true;			}
+		} else {
+			w1 = false;
+		}
+		if (e.isDown) {
 			letter = "e";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!e1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (r.isDown) {
+				e1 = true;				flipflop = true;			}
+		} else {
+			e1 = false;
+		}
+		if (r.isDown) {
 			letter = "r";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!r1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (t.isDown) {
+				r1 = true;				flipflop = true;			}
+		} else {
+			r1 = false;
+		}
+		if (t.isDown) {
 			letter = "t";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!t1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (y.isDown) {
+				t1 = true;				flipflop = true;			}
+		} else {
+			t1 = false;
+		}
+		if (y.isDown) {
 			letter = "y";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!y1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (u.isDown) {
+				y1 = true;				flipflop = true;			}
+		} else {
+			y1 = false;
+		}
+		if (u.isDown) {
 			letter = "u";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!u1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (i.isDown) {
+				u1 = true;				flipflop = true;			}
+		} else {
+			u1 = false;
+		}
+		if (i.isDown) {
 			letter = "i";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!i1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (o.isDown) {
+				i1 = true;				flipflop = true;			}
+		} else {
+			i1 = false;
+		}
+		if (o.isDown) {
 			letter = "o";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!o1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (p.isDown) {
+				o1 = true;				flipflop = true;			}
+		} else {
+			o1 = false;
+		}
+		if (p.isDown) {
 			letter = "p";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!p1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (a.isDown) {
+				p1 = true;				flipflop = true;			}
+		} else {
+			p1 = false;
+		}
+		if (a.isDown) {
 			letter = "a";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!a1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (s.isDown) {
+				a1 = true;				flipflop = true;			}
+		} else {
+			a1 = false;
+		}
+		if (s.isDown) {
 			letter = "s";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!s1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (d.isDown) {
+				s1 = true;				flipflop = true;			}
+		} else {
+			s1 = false;
+		}
+		if (d.isDown) {
 			letter = "d";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!d1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (f.isDown) {
+				d1 = true;				flipflop = true;			}
+		} else {
+			d1 = false;
+		}
+		if (f.isDown) {
 			letter = "f";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!f1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (g.isDown) {
+				f1 = true;				flipflop = true;			}
+		} else {
+			f1 = false;
+		}
+		if (g.isDown) {
 			letter = "g";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!g1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (h.isDown) {
+				g1 = true;				flipflop = true;			}
+		} else {
+			g1 = false;
+		}
+		if (h.isDown) {
 			letter = "h";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!h1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (j.isDown) {
+				h1 = true;				flipflop = true;			}
+		} else {
+			h1 = false;
+		}
+		if (j.isDown) {
 			letter = "j";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!j1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (k.isDown) {
+				j1 = true;				flipflop = true;			}
+		} else {
+			j1 = false;
+		}
+		if (k.isDown) {
 			letter = "k";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!k1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (l.isDown) {
+				k1 = true;				flipflop = true;			}
+		} else {
+			k1 = false;
+		}
+		if (l.isDown) {
 			letter = "l";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!l1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (z.isDown) {
+				l1 = true;				flipflop = true;			}
+		} else {
+			l1 = false;
+		}
+		if (z.isDown) {
 			letter = "z";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!z1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (x.isDown) {
+				z1 = true;				flipflop = true;			}
+		} else {
+			z1 = false;
+		}
+		if (x.isDown) {
 			letter = "x";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!x1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (c.isDown) {
+				x1 = true;				flipflop = true;			}
+		} else {
+			x1 = false;
+		}
+		if (c.isDown) {
 			letter = "c";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!c1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (v.isDown) {
+				c1 = true;				flipflop = true;			}
+		} else {
+			c1 = false;
+		}
+		if (v.isDown) {
 			letter = "v";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!v1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (b.isDown) {
+				v1 = true;				flipflop = true;			}
+		} else {
+			v1 = false;
+		}
+		if (b.isDown) {
 			letter = "b";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!b1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (n.isDown) {
+				b1 = true;				flipflop = true;			}
+		} else {
+			b1 = false;
+		}
+		if (n.isDown) {
 			letter = "n";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!n1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (m.isDown) {
+				n1 = true;				flipflop = true;			}
+		} else {
+			n1 = false;
+		}
+		if (m.isDown) {
 			letter = "m";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!m1 && typed.length < randomWord.length) {
 				typed+=letter;
-				flipflop = true;
-			}
-		} if (spacebar.isDown) {
+				m1 = true;				flipflop = true;			}
+		} else {
+			m1 = false;
+		}
+		if (spacebar.isDown) {
 			letter = " ";
-			if (!flipflop && typed.length < randomWord.length) {
+			if (!spacebar1 && typed.length < randomWord.length) {
 				typed+=" ";
-				flipflop = true;
-			}
+				spacebar1 = true;				flipflop = true;			}
+		} else {
+			spacebar1 = false;
 		}
 		
 		// prevent key from being registered when held down
@@ -440,7 +494,7 @@ window.onload = function() {
 			flipflop = false;
 		}
 		*/
-		
+
 		// update typed text
 		if (flipflop) {
 			// check if phrases partially match
@@ -469,10 +523,6 @@ window.onload = function() {
 			}
 			
 			charIndex += 1;
-		}
-		
-		if (flipflop) {
-			flipflop = false;
 		}
 	}
 	

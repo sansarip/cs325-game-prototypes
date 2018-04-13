@@ -597,6 +597,10 @@ window.onload = function() {
 				difficulty += 1;
 				difficultyText.text = "      x" + difficulty;
 			} 
+			if (timeToNextLevel < MAX_LEVEL && timeToNextLevel%(LEVEL_UP_TIME*3) == 0) {
+				// spawn additional enemies
+				game.time.events.repeat(Phaser.Timer.SECOND * 2.5, 99999999, createAndManageEnemies, this);
+			}
 			if (timeToNextLevel < MAX_LEVEL) {
 				timeToNextLevel += 1;
 			}

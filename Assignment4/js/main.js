@@ -37,6 +37,7 @@ window.onload = function() {
 	const iLimit = Math.floor(WORLD_WIDTH/64)-1;
 	const jLimit = Math.floor(WORLD_HEIGHT/64)-1;
 	const INVUL_TIME = 1;
+	const LEVELUP_TIME = 60;
 	var score = 0;
 	var hearts = 3;
 	var bad1Count = 0;

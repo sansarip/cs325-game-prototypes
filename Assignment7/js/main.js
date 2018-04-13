@@ -33,10 +33,15 @@ window.onload = function() {
     
 	const WORLD_WIDTH = 800;
 	const WORLD_HEIGHT = 600;
-	const WORD_ARRAY = ["algorithm","analog","app","application","array","backup","bandwidth","binary","bit","bitmap","bite","blog","blogger","bookmark","boot","broadband","browser","buffer","bug","bus","byte","cache","caps lock","captcha","cd","cdrom","client","clip art","clip board","cloud computing","command","compile","compress","computer","computer program","configure","cookie","copy","cpu central processing unit","cybercrime","cyberspace","dashboard","data","database","data mining","debug","decompress","delete","desktop","development","digital","disk","dns domain name system","document","domain","domain name","dot","dot matrix","download","drag","dvd digital versatile disc","dynamic","email","emoticon","encrypt","encryption","enter","exabyte","faq frequently asked questions","file","finder","firewall","firmware","flaming","flash","flash drive","floppy disk","flowchart","folder","font","format","frame","freeware","gigabyte","graphics","hack","hacker","hardware","home page","host","html","hyperlink","hypertext","icon","inbox","integer","interface","internet","ip address","iteration","java","joystick","junk mail","kernel","key","keyboard","keyword","laptop","laser printer","link","login","log out","logic","lurking","mainframe","macro","malware","media","memory","mirror","modem","monitor","motherboard","mouse","multimedia","net","network","node","notebook computer","offline","online","open source","operating system","option","output","page","password","paste","path","phishing","piracy","pirate","platform","plugin","podcast","popup","portal","print","printer","privacy","process","program","programmer","protocol","queue","qwerty","ram random access memory","realtime","reboot","resolution","restore","rom read only memory","root","router","runtime","save","scan","scanner","screen","screenshot","script","scroll","scroll bar","search engine","security","server","shareware","shell","shift","shift key","snapshot","social networking","software","spam","spammer","spreadsheet","status bar","storage","spyware","supercomputer","surf","syntax","table","tag","template","terabyte","teminal","text editor","thread","toolbar","trash","trojan horse","typeface","undo","unix","upload","user interface","username","url","user","utility","version","virtual","virtual memory","virus","web","web host","webmaster","website","widget","window","wireless","wiki","word processor","workstation","world wide web","worm","www","xml","zip"];
+	const WORD_ARRAY = ["algorithm","analog","app","application","array","backup","bandwidth","binary","bit","bitmap","bite","blog","blogger","bookmark","boot","broadband","browser","buffer","bug","bus","byte","cache","caps lock","captcha","cd","cdrom","client","clip art","clip board","cloud computing","command","compile","compress","computer","computer program","configure","cookie","copy","cpu central processing unit","cybercrime","cyberspace","dashboard","data","database","data mining","debug","decompress","delete","desktop","development","digital","disk","dns domain name system","document","domain","domain name","dot","dot matrix","download","drag","dvd digital versatile disc","dynamic","email","emoticon","encrypt","encryption","enter","exabyte","faq frequently asked questions","file","finder","firewall","firmware","flaming","flash","flash drive","floppy disk","flowchart","folder","font","format","frame","freeware","gigabyte","graphics","hack","hacker","hardware","home page","host","html","hyperlink","hypertext","icon","inbox","integer","interface","internet","ip address","iteration","java","joystick","junk mail","kernel","key","keyboard","keyword","laptop","laser printer","link","login","log out","logic","lurking","mainframe","macro","malware","media","memory","mirror","modem","monitor","motherboard","mouse","multimedia","net","network","node","notebook computer","offline","online","open source","operating system","option","output","page","password","paste","path","phishing","piracy","pirate","platform","plugin","podcast","popup","portal","print","printer","privacy","process","program","programmer","protocol","queue","qwerty","ram random access memory","realtime","reboot","resolution","restore","rom read only memory","root","router","runtime","save","scan","scanner","screen","screenshot","script","scroll","scroll bar","search engine","security","server","shareware","shell","shift","shift key","snapshot","social networking","software","spam","spammer","spreadsheet","status bar","storage","spyware","supercomputer","surf","syntax","table","tag","template","terabyte","terminal","text editor","thread","toolbar","trash","trojan horse","typeface","undo","unix","upload","user interface","username","url","user","utility","version","virtual","virtual memory","virus","web","web host","webmaster","website","widget","window","wireless","wiki","word processor","workstation","world wide web","worm","www","xml","zip"];
 	const NUM_WORDS = 230;
 	const MAX_BAD = 10;
 	const MAX_HEARTS = 3;
+	const LEVEL_UP_TIME = 30;	// actually 60 seconds because enemies spawn every 2 seconds and that's when the time till next level also gets updated
+	const MAX_LEVEL = LEVEL_UP_TIME * 5;
+	const SPEED_INCREASE = 10;
+	let timeToNextLevel = 1;
+	let enemySpeed = 25;
 	let endText = [];
     let bad1Array = [];
 	let bad1EffectArray = [];
@@ -59,6 +64,8 @@ window.onload = function() {
 	let flipflop = false;
 	let typed = "";
 	let score = 0;
+	let difficulty = 1;
+	let difficultyText;
 	let charIndex = 0;
 	let nextEnemy = 0;
 	let gameStart = false;
@@ -103,16 +110,8 @@ window.onload = function() {
 		typedText = game.add.text(game.world.width/2, game.world.height/2.4, "test", header1R);
 		typedText.anchor.setTo( 0.5, 0.0 );
 		typedText.visible = false;
-
-		
-		// set hearts
-		resetHearts();
-		
-		// spawn enemies
-		game.time.events.repeat(Phaser.Timer.SECOND * 2, 99999999, createAndManageEnemies, this);
-		
-		// move enemies 
-		game.time.events.repeat(Phaser.Timer.SECOND * .25, 99999999, moveEnemies, this);
+		difficultyText = game.add.text(0, 0, "      x1", header1);
+		difficultyText.anchor.setTo( 0.5, 0.0 );
 		
 		// audio setting
 		theme.loop = true;
@@ -155,6 +154,15 @@ window.onload = function() {
 		n = game.input.keyboard.addKey(Phaser.Keyboard.N);
 		m = game.input.keyboard.addKey(Phaser.Keyboard.M);
 		spacebar = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+		
+		// set hearts
+		resetHearts();
+		
+		// spawn enemies
+		game.time.events.repeat(Phaser.Timer.SECOND * 2, 99999999, createAndManageEnemies, this);
+		
+		// move enemies 
+		game.time.events.repeat(Phaser.Timer.SECOND * .25, 99999999, moveEnemies, this);
     }
    
     function update() {
@@ -520,7 +528,7 @@ window.onload = function() {
 		for (i = 0; i < bad1Count; i++) {
 			let bad1 = bad1Array[i];
 			if (bad1.canMove) {
-				bad1.badObj.y += 20;
+				bad1.badObj.y += enemySpeed;
 			}
 		}
 	}
@@ -533,6 +541,14 @@ window.onload = function() {
 				var b = new Bad1(128, 128);
 				bad1Array.push(b);
 				bad1Count += 1;
+			}
+			if (timeToNextLevel < MAX_LEVEL && timeToNextLevel%LEVEL_UP_TIME == 0) {
+				enemySpeed += SPEED_INCREASE;
+				difficulty += 1;
+				difficultyText.text = "      x" + difficulty;
+			} 
+			if (timeToNextLevel < MAX_LEVEL) {
+				timeToNextLevel += 1;
 			}
 		}
 	}

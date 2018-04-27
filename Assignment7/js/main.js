@@ -92,11 +92,11 @@ window.onload = function() {
 		
         
         // add text styles
-		header3 = { font: "20px Roboto", fill: "#8800FF", align: "center" };
-        header2 = { font: "30px Roboto", fill: "#8800FF", align: "center" };
-		header1 = { font: "50px Roboto", fill: "#6600FF", align: "center" };
-		header1R = { font: "40px Roboto", fill: "#8800FF", align: "center" };
-		header0 = { font: "60px Roboto", fill: "#FFFFFF", align: "center" };
+		header3 = { font: "20px Press Start 2P", fill: "#8800FF", align: "center" };
+        header2 = { font: "30px Press Start 2P", fill: "#8800FF", align: "center" };
+		header1 = { font: "50px Press Start 2P", fill: "#6600FF", align: "center" };
+		header1R = { font: "40px Press Start 2P", fill: "#8800FF", align: "center" };
+		header0 = { font: "60px Press Start 2P", fill: "#FFFFFF", align: "center" };
 		
 		// random word
 		randomWordIndex = Math.floor(Math.random() * NUM_WORDS);

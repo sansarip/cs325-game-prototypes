@@ -10,7 +10,7 @@ window.onload = function() {
     // loading functions to reflect where you are putting the assets.
     // All loading functions will typically all be found inside "preload()".
     
-    let game = new Phaser.Game( 800, 600, Phaser.AUTO, 'game', { preload: preload, create: create, update: update } );
+    let game = new Phaser.Game( 768, 576, Phaser.AUTO, 'game', { preload: preload, create: create, update: update } );
     let bad1P = "assets/Sprites/enemy1.png";
     let effect1P = "assets/Sprites/lightning.png";
 	let tile1P = "assets/Background/circuit.png";
@@ -275,7 +275,9 @@ window.onload = function() {
 			letter = "q";
 			if (!q1 && typed.length < randomWord.length) {
 				typed+=letter;
-				q1 = true;				flipflop = true;			}
+				q1 = true;
+				flipflop = true;
+			}
 		} else {
 			q1 = false;
 		}
@@ -283,7 +285,9 @@ window.onload = function() {
 			letter = "w";
 			if (!w1 && typed.length < randomWord.length) {
 				typed+=letter;
-				w1 = true;				flipflop = true;			}
+				w1 = true;
+				flipflop = true;
+			}
 		} else {
 			w1 = false;
 		}
@@ -291,7 +295,9 @@ window.onload = function() {
 			letter = "e";
 			if (!e1 && typed.length < randomWord.length) {
 				typed+=letter;
-				e1 = true;				flipflop = true;			}
+				e1 = true;
+				flipflop = true;
+			}
 		} else {
 			e1 = false;
 		}
@@ -299,7 +305,9 @@ window.onload = function() {
 			letter = "r";
 			if (!r1 && typed.length < randomWord.length) {
 				typed+=letter;
-				r1 = true;				flipflop = true;			}
+				r1 = true;
+				flipflop = true;
+			}
 		} else {
 			r1 = false;
 		}
@@ -307,7 +315,9 @@ window.onload = function() {
 			letter = "t";
 			if (!t1 && typed.length < randomWord.length) {
 				typed+=letter;
-				t1 = true;				flipflop = true;			}
+				t1 = true;
+				flipflop = true;
+			}
 		} else {
 			t1 = false;
 		}
@@ -315,7 +325,9 @@ window.onload = function() {
 			letter = "y";
 			if (!y1 && typed.length < randomWord.length) {
 				typed+=letter;
-				y1 = true;				flipflop = true;			}
+				y1 = true;
+				flipflop = true;
+			}
 		} else {
 			y1 = false;
 		}
@@ -323,7 +335,9 @@ window.onload = function() {
 			letter = "u";
 			if (!u1 && typed.length < randomWord.length) {
 				typed+=letter;
-				u1 = true;				flipflop = true;			}
+				u1 = true;
+				flipflop = true;
+			}
 		} else {
 			u1 = false;
 		}
@@ -331,7 +345,9 @@ window.onload = function() {
 			letter = "i";
 			if (!i1 && typed.length < randomWord.length) {
 				typed+=letter;
-				i1 = true;				flipflop = true;			}
+				i1 = true;
+				flipflop = true;
+			}
 		} else {
 			i1 = false;
 		}
@@ -339,7 +355,9 @@ window.onload = function() {
 			letter = "o";
 			if (!o1 && typed.length < randomWord.length) {
 				typed+=letter;
-				o1 = true;				flipflop = true;			}
+				o1 = true;
+				flipflop = true;
+			}
 		} else {
 			o1 = false;
 		}
@@ -347,7 +365,9 @@ window.onload = function() {
 			letter = "p";
 			if (!p1 && typed.length < randomWord.length) {
 				typed+=letter;
-				p1 = true;				flipflop = true;			}
+				p1 = true;
+				flipflop = true;
+			}
 		} else {
 			p1 = false;
 		}
@@ -355,7 +375,9 @@ window.onload = function() {
 			letter = "a";
 			if (!a1 && typed.length < randomWord.length) {
 				typed+=letter;
-				a1 = true;				flipflop = true;			}
+				a1 = true;
+				flipflop = true;
+			}
 		} else {
 			a1 = false;
 		}
@@ -363,7 +385,9 @@ window.onload = function() {
 			letter = "s";
 			if (!s1 && typed.length < randomWord.length) {
 				typed+=letter;
-				s1 = true;				flipflop = true;			}
+				s1 = true;
+				flipflop = true;
+			}
 		} else {
 			s1 = false;
 		}
@@ -371,7 +395,9 @@ window.onload = function() {
 			letter = "d";
 			if (!d1 && typed.length < randomWord.length) {
 				typed+=letter;
-				d1 = true;				flipflop = true;			}
+				d1 = true;
+				flipflop = true;
+			}
 		} else {
 			d1 = false;
 		}
@@ -379,7 +405,9 @@ window.onload = function() {
 			letter = "f";
 			if (!f1 && typed.length < randomWord.length) {
 				typed+=letter;
-				f1 = true;				flipflop = true;			}
+				f1 = true;
+				flipflop = true;
+			}
 		} else {
 			f1 = false;
 		}
@@ -387,7 +415,9 @@ window.onload = function() {
 			letter = "g";
 			if (!g1 && typed.length < randomWord.length) {
 				typed+=letter;
-				g1 = true;				flipflop = true;			}
+				g1 = true;
+				flipflop = true;
+			}
 		} else {
 			g1 = false;
 		}
@@ -395,7 +425,9 @@ window.onload = function() {
 			letter = "h";
 			if (!h1 && typed.length < randomWord.length) {
 				typed+=letter;
-				h1 = true;				flipflop = true;			}
+				h1 = true;
+				flipflop = true;
+			}
 		} else {
 			h1 = false;
 		}
@@ -403,7 +435,9 @@ window.onload = function() {
 			letter = "j";
 			if (!j1 && typed.length < randomWord.length) {
 				typed+=letter;
-				j1 = true;				flipflop = true;			}
+				j1 = true;
+				flipflop = true;
+			}
 		} else {
 			j1 = false;
 		}
@@ -411,7 +445,9 @@ window.onload = function() {
 			letter = "k";
 			if (!k1 && typed.length < randomWord.length) {
 				typed+=letter;
-				k1 = true;				flipflop = true;			}
+				k1 = true;
+				flipflop = true;
+			}
 		} else {
 			k1 = false;
 		}
@@ -419,7 +455,9 @@ window.onload = function() {
 			letter = "l";
 			if (!l1 && typed.length < randomWord.length) {
 				typed+=letter;
-				l1 = true;				flipflop = true;			}
+				l1 = true;
+				flipflop = true;
+			}
 		} else {
 			l1 = false;
 		}
@@ -427,7 +465,9 @@ window.onload = function() {
 			letter = "z";
 			if (!z1 && typed.length < randomWord.length) {
 				typed+=letter;
-				z1 = true;				flipflop = true;			}
+				z1 = true;
+				flipflop = true;
+			}
 		} else {
 			z1 = false;
 		}
@@ -435,7 +475,9 @@ window.onload = function() {
 			letter = "x";
 			if (!x1 && typed.length < randomWord.length) {
 				typed+=letter;
-				x1 = true;				flipflop = true;			}
+				x1 = true;
+				flipflop = true;
+			}
 		} else {
 			x1 = false;
 		}
@@ -443,7 +485,9 @@ window.onload = function() {
 			letter = "c";
 			if (!c1 && typed.length < randomWord.length) {
 				typed+=letter;
-				c1 = true;				flipflop = true;			}
+				c1 = true;
+				flipflop = true;
+			}
 		} else {
 			c1 = false;
 		}
@@ -451,7 +495,9 @@ window.onload = function() {
 			letter = "v";
 			if (!v1 && typed.length < randomWord.length) {
 				typed+=letter;
-				v1 = true;				flipflop = true;			}
+				v1 = true;
+				flipflop = true;
+			}
 		} else {
 			v1 = false;
 		}
@@ -459,7 +505,9 @@ window.onload = function() {
 			letter = "b";
 			if (!b1 && typed.length < randomWord.length) {
 				typed+=letter;
-				b1 = true;				flipflop = true;			}
+				b1 = true;
+				flipflop = true;
+			}
 		} else {
 			b1 = false;
 		}
@@ -467,7 +515,9 @@ window.onload = function() {
 			letter = "n";
 			if (!n1 && typed.length < randomWord.length) {
 				typed+=letter;
-				n1 = true;				flipflop = true;			}
+				n1 = true;
+				flipflop = true;
+			}
 		} else {
 			n1 = false;
 		}
@@ -475,7 +525,9 @@ window.onload = function() {
 			letter = "m";
 			if (!m1 && typed.length < randomWord.length) {
 				typed+=letter;
-				m1 = true;				flipflop = true;			}
+				m1 = true;
+				flipflop = true;
+			}
 		} else {
 			m1 = false;
 		}
@@ -483,7 +535,9 @@ window.onload = function() {
 			letter = " ";
 			if (!spacebar1 && typed.length < randomWord.length) {
 				typed+=" ";
-				spacebar1 = true;				flipflop = true;			}
+				spacebar1 = true;
+				flipflop = true;
+			}
 		} else {
 			spacebar1 = false;
 		}

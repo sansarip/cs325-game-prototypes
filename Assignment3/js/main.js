@@ -10,7 +10,7 @@ window.onload = function() {
     // loading functions to reflect where you are putting the assets.
     // All loading functions will typically all be found inside "preload()".
     
-    var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game', { preload: preload, create: create, update: update, render: render} );
+    var game = new Phaser.Game(768, 576, Phaser.AUTO, 'game', { preload: preload, create: create, update: update, render: render} );
     var cloudP = "assets/Sprites/clouds.png";
 	var goodP = "assets/Sprites/good.png";
 	var badP = "assets/Sprites/bad.png";
